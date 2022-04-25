@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node14/tsconfig.json",
+  "include": ["src/**/*.ts", "__tests__/**/*.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true
+  }
+}

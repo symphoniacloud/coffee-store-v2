@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  github-aws-oidc resources, as used by Coffee Store.
+  See https://github.com/symphoniacloud/coffee-store-v2/blob/main/github-actions-prereqs/template.yaml
+
+Parameters:
+  GithubOrganization:
+    Type: String
+
+  OIDCProviderArn:
+    Description: Arn for the GitHub OIDC Provider if already setup in account.
+    Default: "NONE"
+    Type: String
+
+Conditions:
+  CreateOIDCProvider: !Equals [ !Ref OIDCProviderArn, "NONE" ]
+
+Outputs:
+  Role:
+    Value: !GetAtt Role.Arn
+
+Resources:
+  # Create an OIDC Provider for Github Actions if it hasn't previously been set up in account
+  GithubOidc:
+    Type: AWS::IAM::OIDCProvider
+    Condition: CreateOIDCProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList: [ sts.amazonaws.com ]
+      ThumbprintList: [ 6938fd4d98bab03faadb97b34396831e3780aea1 ]
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: sts:AssumeRoleWithWebIdentity
+            Principal:
+              Federated: !If [ CreateOIDCProvider, !Ref GithubOidc, !Ref OIDCProviderArn ]
+            Condition:
+              StringLike:
+                # This allows full access from your entire organization - you may want to narrow this down
+                token.actions.githubusercontent.com:sub: !Sub 'repo:${GithubOrganization}/*'
+      Policies:
+        # We define a policy inline, but this could be maintained separately as a customer managed policy
+        - PolicyName: GithubActionsPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                # Everything that Github Actions / CDK needs for your app
+                # You should broaden / restrict this, as necessary
+                Action:
+                  - logs:*
+                  - lambda:*
+                  - cloudformation:*
+                  - iam:*
+                  - ssm:*
+                  - s3:*
+                Resource: '*'
+

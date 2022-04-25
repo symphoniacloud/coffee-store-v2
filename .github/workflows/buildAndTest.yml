@@ -1,0 +1,30 @@
+name: Build & Test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Required because we are using OIDC
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Build, Deploy, Test
+        shell: bash
+        run: ./build.sh && STACK_NAME_PREFIX=coffee-store-ci npm test
