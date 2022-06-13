@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+# Only allow one run at a time for this workflow
+# See https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
+# This workflow will only run once per this workflow name, and per ref (which is the branch or tag)
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 # Required because we are using OIDC
 permissions:
   id-token: write
