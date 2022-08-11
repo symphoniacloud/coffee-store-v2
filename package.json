@@ -27,8 +27,8 @@
         "typescript": "4.x"
     },
     "scripts": {
-        "build": "tsc",
-        "test": "npm run unit-test && npm run integration-test",
+        "type-check-and-unit-test": "npm run type-check && npm run unit-test",
+        "type-check": "tsc",
         "unit-test": "jest --config __tests__/jest-unit.config.js",
         "integration-test": "jest --config __tests__/jest-integration.config.js",
         "deploy": "npx cdk deploy --output build/cdk.out --require-approval never",
