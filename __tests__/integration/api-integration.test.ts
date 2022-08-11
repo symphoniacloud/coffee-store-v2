@@ -13,7 +13,7 @@ beforeAll(async () => {
 
     if (isUsingEphemeralStack) {
         console.log(`Starting cloudformation deployment of stack ${stackName}`)
-        const { stdout } = await promisify(exec)(`./deploy.sh ${stackName}`)
+        const { stdout } = await promisify(exec)(`npm run deploy -- --context stackName=${stackName}`)
         console.log(stdout)
     }
 
