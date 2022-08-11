@@ -18,14 +18,7 @@ class CoffeeStoreStack extends Stack {
                 sourceMap: true,
                 sourceMapMode: SourceMapMode.INLINE,
                 sourcesContent: false,
-                commandHooks: {
-                    // TODO - use inputDir here?
-                    beforeBundling(): string[] {
-                        return [ `npx tsc` ]
-                    },
-                    beforeInstall(): string[] { return [] },
-                    afterBundling(): string[] { return [] },
-                }
+                preCompilation: true
             },
         })
 
