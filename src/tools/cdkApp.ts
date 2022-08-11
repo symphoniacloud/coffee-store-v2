@@ -11,7 +11,7 @@ class CoffeeStoreStack extends Stack {
         const lambdaFunction = new Function(this, 'HelloWorldFunction', {
             handler: 'lambda.handler',
             code: Code.fromAsset('dist/api.zip'),
-            runtime: Runtime.NODEJS_14_X
+            runtime: Runtime.NODEJS_16_X
         })
 
         const fnUrl = lambdaFunction.addFunctionUrl({
