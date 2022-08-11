@@ -4,7 +4,7 @@ import {App, CfnOutput, Stack, StackProps} from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import {FunctionUrlAuthType, Runtime} from "aws-cdk-lib/aws-lambda";
 import {NodejsFunction, SourceMapMode} from "aws-cdk-lib/aws-lambda-nodejs";
-import {createStackProps} from "./initSupport";
+import {calcStackNameForUser, createStackProps} from "./initSupport";
 
 class CoffeeStoreStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -34,4 +34,4 @@ class CoffeeStoreStack extends Stack {
 }
 
 const app = new App();
-new CoffeeStoreStack(app, 'CoffeeStore', createStackProps(app, 'default-coffee-store-stack'));
+new CoffeeStoreStack(app, 'CoffeeStore', createStackProps(app, calcStackNameForUser('coffee-store-v2-')));

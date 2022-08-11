@@ -52,7 +52,7 @@ the reasoning behind this choice see https://blog.symphonia.io/posts/2020-08-19_
 Note - you **do not** need to install CDK locally since the deploy script below uses the CDK library and tooling defined
 within the project.
 
-Run `./deploy.sh`. 
+Run `$ npm run deploy`. 
 
 If you want you can pass the name of the stack you want to
 create as the first argument to the deploy script, alternatively the stack will be named `coffee-store-v2-$USERNAME`
