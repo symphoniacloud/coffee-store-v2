@@ -30,6 +30,9 @@ jobs:
           role-to-assume: ${{ secrets.ACTIONS_ROLE_ARN }}
           aws-region: us-east-1
 
-      - name: Build, Deploy, Test
+      - name: Test
         shell: bash
-        run: ./build.sh && STACK_NAME_PREFIX=coffee-store-ci npm test
+        run: >
+          npm install &&
+          npm run type-check-and-unit-test &&
+          STACK_NAME_PREFIX=coffee-store-ci npm run integration-test

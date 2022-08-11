@@ -18,6 +18,7 @@ class CoffeeStoreStack extends Stack {
                 sourceMap: true,
                 sourceMapMode: SourceMapMode.INLINE,
                 sourcesContent: false,
+                // We use this to perform type checking with tsc, rather than actually generating any files
                 preCompilation: true
             },
         })

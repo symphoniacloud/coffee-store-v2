@@ -26,18 +26,12 @@ This version contains the following changes since the 2020 version:
 
 ## Working Locally from the Command Line
 
-**Pre-requisites**: Node >= 14 installed
+**Pre-requisites**: Node >= 16 installed
 
 ```
-% ./build.sh
+$ npm install
+$ npm run type-check-and-unit-test
 ```
-
-This will:
-
-* Install dependencies
-* Perform type checking
-* Package Lambda artifacts
-* Run unit tests
 
 The unit tests run entirely locally, and execute the code directly, i.e. they do not use local runtime simulators. For
 the reasoning behind this choice see https://blog.symphonia.io/posts/2020-08-19_serverless_testing .
@@ -58,8 +52,9 @@ the reasoning behind this choice see https://blog.symphonia.io/posts/2020-08-19_
 Note - you **do not** need to install CDK locally since the deploy script below uses the CDK library and tooling defined
 within the project.
 
-First build the app using `./build.sh`. Then run `./deploy.sh`. If you want you can pass the name of the stack you want
-to
+Run `./deploy.sh`. 
+
+If you want you can pass the name of the stack you want to
 create as the first argument to the deploy script, alternatively the stack will be named `coffee-store-v2-$USERNAME`
 where `$USERNAME` is your local username.
 
