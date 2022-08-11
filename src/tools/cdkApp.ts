@@ -2,16 +2,22 @@
 import 'source-map-support/register';
 import {App, CfnOutput, Stack, StackProps} from 'aws-cdk-lib';
 import {Construct} from 'constructs';
-import {Code, Function, FunctionUrlAuthType, Runtime} from "aws-cdk-lib/aws-lambda";
+import {FunctionUrlAuthType, Runtime} from "aws-cdk-lib/aws-lambda";
+import {NodejsFunction, SourceMapMode} from "aws-cdk-lib/aws-lambda-nodejs";
 
 class CoffeeStoreStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        const lambdaFunction = new Function(this, 'HelloWorldFunction', {
-            handler: 'lambda.handler',
-            code: Code.fromAsset('dist/api.zip'),
-            runtime: Runtime.NODEJS_16_X
+        const lambdaFunction = new NodejsFunction(this, 'HelloWorldFunction', {
+            runtime: Runtime.NODEJS_16_X,
+            entry: 'src/lambdaFunctions/api/lambda.ts',
+            bundling: {
+                target: 'node16',
+                sourceMap: true,
+                sourceMapMode: SourceMapMode.INLINE,
+                sourcesContent: false
+            },
         })
 
         const fnUrl = lambdaFunction.addFunctionUrl({

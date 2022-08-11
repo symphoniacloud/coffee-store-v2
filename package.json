@@ -15,18 +15,14 @@
         "aws-cdk-lib": "2.x",
         "constructs": "10.x",
         "source-map-support": "^0.5.16",
-        "adm-zip": "0.x",
         "esbuild": "*",
-        "glob": "7.x",
         "jest": "27.x",
         "ts-jest": "27.x",
         "ts-node": "10.x",
         "typescript": "4.x"
     },
     "scripts": {
-        "build": "npm run tsc && npm run package",
-        "tsc": "tsc -noEmit",
-        "package": "ts-node src/tools/build.ts",
+        "build": "tsc",
         "test": "npm run unit-test && npm run integration-test",
         "unit-test": "jest --config __tests__/jest-unit.config.js",
         "integration-test": "jest --config __tests__/jest-integration.config.js"
