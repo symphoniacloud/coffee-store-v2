@@ -1,7 +1,13 @@
 {
     "name": "coffee-store-v2",
-    "version": "2022.1.0",
-    "private": true,
+    "version": "2022.2.0",
+    "homepage": "https://github.com/symphoniacloud/coffee-store-v2",
+    "license": "MIT",
+    "author": {
+        "email": "mike@symphonia.io",
+        "name": "Mike Roberts",
+        "url": "https://symphonia.io"
+    },
     "devDependencies": {
         "@aws-sdk/client-cloudformation": "3.x",
         "@jest/globals": "27.x",
@@ -14,7 +20,6 @@
         "aws-cdk": "2.x",
         "aws-cdk-lib": "2.x",
         "constructs": "10.x",
-        "source-map-support": "^0.5.16",
         "esbuild": "*",
         "jest": "27.x",
         "ts-jest": "27.x",
@@ -25,6 +30,11 @@
         "build": "tsc",
         "test": "npm run unit-test && npm run integration-test",
         "unit-test": "jest --config __tests__/jest-unit.config.js",
-        "integration-test": "jest --config __tests__/jest-integration.config.js"
+        "integration-test": "jest --config __tests__/jest-integration.config.js",
+        "deploy": "npx cdk deploy --output build/cdk.out --require-approval never",
+        "cdk-diff" : "npx cdk diff --output build/cdk.out --require-approval never",
+        "cdk-destroy" : "npx cdk destroy --output build/cdk.out --require-approval never",
+        "precdk-command": "echo \"Running CDK with command: $npm_config_command\"",
+        "cdk-command": "npx cdk $npm_config_command --output build/cdk.out --require-approval never"
     }
 }

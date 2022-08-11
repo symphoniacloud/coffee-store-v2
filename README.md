@@ -12,7 +12,7 @@ This is an updated version of a demo app I originally put together in 2020 for
 
 This version contains the following changes since the 2020 version:
 
-* Uses TypeScript instead of Javascript, plus some opinionated build + package scripting
+* Uses TypeScript instead of Javascript
 * Uses CDK instead of SAM
 * Uses Github Actions instead of AWS CodeBuild for automation. Github Actions-to-AWS security uses OIDC, not long-lived
   access tokens.
@@ -173,4 +173,18 @@ version of CDK within the project then you should run `npx cdk ...` where the do
 the simplest case to bootstrap an account with no specific options then just run `npx cdk bootstrap` from your terminal,
 in the project's root directory.
 
+## Changelog
 
+### 2022.2
+
+* Update Node to Node 16 (tooling + runtime)
+* Switch to CDK for building, by using NodejsFunction
+* Standardize project setup vs https://github.com/symphoniacloud/cdk-bare-bones
+
+### 2022.1
+
+* Uses TypeScript instead of Javascript, plus some opinionated build + package scripting
+* Uses CDK instead of SAM
+* Uses Github Actions instead of AWS CodeBuild for automation. Github Actions-to-AWS security uses OIDC, not long-lived
+  access tokens.
+* Uses a Lambda Function URL instead of API Gateway
