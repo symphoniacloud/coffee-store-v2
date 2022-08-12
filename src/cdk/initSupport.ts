@@ -1,5 +1,4 @@
 import {App, Environment, StackProps} from "aws-cdk-lib";
-import * as os from "os";
 
 // Generic functions to help with stack initialization
 
@@ -16,10 +15,6 @@ interface StackPropsWithAccountRegionAndStackName extends StackProps {
  */
 export function createStackProps(app: App, defaultStackName: string): StackPropsWithAccountRegionAndStackName {
     return {env: calcEnvironment(), stackName: calcStackName(app, defaultStackName)}
-}
-
-export function calcStackNameForUser(prefix: string) {
-    return`${prefix}${os.userInfo().username}`
 }
 
 /**

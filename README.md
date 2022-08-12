@@ -1,7 +1,6 @@
 # Coffee Store V2
 
-This is a "walking skeleton" AWS Lambda app, using **TypeScript**, **CDK**, **Jest**, and **Github Actions**. It is
-fully
+This is a "walking skeleton" AWS Lambda app, using **TypeScript**, **CDK**, **Jest**, and **Github Actions**. It is fully
 deployable, includes tests, and has a Github Actions workflow that will perform integration tests on an ephemeral
 deployment in AWS.
 
@@ -18,63 +17,87 @@ This version contains the following changes since the 2020 version:
   access tokens.
 * Uses a Lambda Function URL instead of API Gateway
 
-## Getting started
+## Other CDK examples
 
-* Clone this repo to your local machine
-* If you want to use the included Github Actions workflow then create a new Github repo and push your local version of
-  this repo to it.
+This example is part of a collection of CDK examples - others are as follows:
 
-## Working Locally from the Command Line
+* [CDK bare-bones app for TypeScript](https://github.com/symphoniacloud/cdk-bare-bones) - Base project for any TypeScript app using CDK for deployment to AWS. **Try this first if you are getting started with CDK.**
+* [Coffee Store Web Basic](https://github.com/symphoniacloud/coffee-store-web-basic) - Website hosting on AWS with CloudFront and S3
+* [Coffee Store Web Full](https://github.com/symphoniacloud/coffee-store-web-full) - A further extension of _Coffee Store Web Basic_ that is a real working demo of a production-ready website project, including TLS certificates, DNS hosting, Github Actions Workflows, multiple CDK environments (prod vs test vs dev)
 
-**Pre-requisites**: Node >= 16 installed
+## How this project works
 
+This example deploys a CDK _App_ that deploys a Lambda Function, together with a [Lambda Function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html) to make it accessible over HTTP.
+
+To build the Lambda function, this example uses the [`NodejsFunction` CDK Construct](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs-readme.html) which performs build actions as part of the deploy process. In this configuration the Construct:
+
+* Runs TSC in "noEmit" mode to perform type-checking
+* Runs Esbuild to create an optimized artifact for the Lambda function 
+
+### "CDK as build tool"
+
+Using `NodejsFunction` makes CDK a build tool and not just a deployment tool. In the past I've been hesitant to use this feature since it didn't feel like it worked well for me.
+
+As of August 2022, however, I feel like `NodejsFunction` is probably "good enough" for many small to medium size TS Lambda projects. There's still one small bug for `NodejsFunction` in how I have TSC configured (see the comment in [_tsconfig.json_](tsconfig.json)), but there's a reasonable workaround for that.
+
+If you'd like more control over your build process then swap `NodejsFunction` for the standard CDK `Function` construct, and add a _build_ phase to your project. To see an example of this, including a wrapper script for ESBuild, see the [earlier version of this project](https://github.com/symphoniacloud/coffee-store-v2/tree/57a209a28be7eabe468125ea1d5dc0f81433fcd2).
+
+## Prerequisites
+
+Please see the [prerequisites of the cdk-bare-bones](https://github.com/symphoniacloud/cdk-bare-bones#prerequisites) project - all of the prerequisites in that project also apply to this one.
+
+## Usage
+
+After cloning this project to your local machine, run the following to perform local checks on the code:
+
+```shell
+$ npm install && npm run type-check-and-unit-test
 ```
-$ npm install
-$ npm run type-check-and-unit-test
+
+If successful, the end result will look something like this:
+
+```shell
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        0.253 s
+Ran all test suites.
 ```
 
 The unit tests run entirely locally, and execute the code directly, i.e. they do not use local runtime simulators. For
 the reasoning behind this choice see https://blog.symphonia.io/posts/2020-08-19_serverless_testing .
 
+> Once you've run npm install once in the directory you won't need to again
+
+To deploy the application to AWS run the following:
+
+```shell
+$ npm run deploy
+```
+
+If successful, the end result will look something like this:
+
+```shell
+ ✅  CoffeeStore (coffee-store-v2)
+
+✨  Deployment time: 64.38s
+
+Outputs:
+CoffeeStore.ApiUrl = https://t7bz3kq6zhpqiotdgp3tpvv7ie0vkpcw.lambda-url.us-east-1.on.aws/
+Stack ARN:
+arn:aws:cloudformation:us-east-1:397589511426:stack/coffee-store-v2/7ef9afc0-1a72-11ed-91e9-0e87df064301
+
+✨  Total time: 68.29s
+```
+
+That `CoffeeStore.ApiUrl` value is a public URL - access it with your browser and you should see a "Hello World" message.
+
+For other commands, **including how to teardown**, see the [_Usage_ section of the bare-bones project README](https://github.com/symphoniacloud/cdk-bare-bones#usage).
+
 ## Working Locally from an IDE
 
 * Install dependencies with `npm install`, or your IDE's Node support.
 * Run unit tests using the configuration at [\_\_tests__/jest-unit.config.js](__tests__/jest-unit.config.js)
-
-## Deploying to AWS
-
-**Further pre-requisites**:
-
-* Your local AWS environment should be setup to use the correct profile and region
-    * If in doubt, run `aws s3 ls` to make sure you are seeing expected buckets
-* You need to have bootstrapped your AWS account, in your desired region, for CDK - see appendix below.
-
-Note - you **do not** need to install CDK locally since the deploy script below uses the CDK library and tooling defined
-within the project.
-
-Run `$ npm run deploy`. 
-
-If you want you can pass the name of the stack you want to
-create as the first argument to the deploy script, alternatively the stack will be named `coffee-store-v2-$USERNAME`
-where `$USERNAME` is your local username.
-
-If deployment is successful you should see something like the following at the end of the process:
-
-```shell
-✨  Deployment time: 79.62s
-
-Outputs:
-CoffeeStore.ApiUrl = https://1234567890abcdefghij1234567890ab.lambda-url.us-east-1.on.aws/
-Stack ARN:
-arn:aws:cloudformation:us-east-1:1234567890:stack/coffee-store-v2-mike/12345678-1234-1234-1234-1234567890
-
-✨  Total time: 82.11s
-```
-
-That `CoffeeStore.ApiUrl` is a public URL - access it with your browser and you should see a "Hello World" message.
-
-Since this application is available to the public internet you probably want to tear it down when you're done with it.
-To do so visit the CloudFormation section of the AWS Web Console and delete the stack.
 
 ## Running integration tests
 
@@ -82,17 +105,11 @@ This project includes an integration test which calls the deployed app in AWS vi
 
 ### Running integration tests targeting a stack that has already been deployed
 
-If you want to run the tests against a stack that has already been deployed you should specify the stack's name with
+If you want to run the integration tests against a stack that has already been deployed you should specify the stack's name with
 the `STACK_NAME` environment variable, e.g.:
 
 ```shell
-% STACK_NAME=coffee-store-v2-mike npm run integration-test
-```
-
-Alternatively, to run all tests (including unit tests), using a pre-deployed stack for the integration test, run:
-
-```shell
-% STACK_NAME=coffee-store-v2-mike npm test
+$ STACK_NAME=coffee-store-v2 npm run integration-test
 ```
 
 If you are running tests via the IDE:
@@ -107,7 +124,7 @@ Alternatively the integration test can run against an _ephemeral_ stack - i.e. a
 test setup, and then torn down as part of test cleanup. To use this method don't
 specify a `STACK_NAME` value in the environment.
 
-E.g. if you run `npm run test` **with no** `STACK_NAME` you will see something like the following in the console output
+E.g. if you run `npm run integration-test` **with no** `STACK_NAME` you will see something like the following in the console output
 while the integration test is being run:
 
 ```shell
@@ -132,10 +149,10 @@ the `STACK_NAME_PREFIX` environment variable when running the integration test.
 
 ## Continuous integration automation
 
-### Prerequisites
+### Github Actions Prerequisites
 
 The included Github Actions workflow at [.github/workflows/buildAndTest.yml](.github/workflows/buildAndTest.yml) will
-build the app and run all tests. Since these tests include the integration tests, the workflow will (indirectly) deploy
+run all tests. Since these tests include the integration tests, the workflow will (indirectly) deploy
 an ephemeral version of the application to AWS, and therefore the Github Actions workflow needs permission to access
 your AWS account.
 
@@ -147,26 +164,8 @@ see [github-actions-prereqs/README.md](github-actions-prereqs/README.md).
 The included workflow will either run automatically whenever you push a change to the `main` branch, or when you run
 the workflow manually through the web console.
 
-You might choose to update the workflow to also deploy a non-ephemeral version of the app, in which case call
-the `deploy.sh` script from the workflow after running `build.sh` - in which case you may also want to override
-the `STACK_NAME` env var.
-
-## Appendix
-
-### Bootstrapping CDK
-
-:warning: **If you are using a shared development account then make sure any changes you make here are compatible with
-the rest of the account.**
-
-This project uses **CDK version 2** to deploy the application to AWS. If your AWS account has **not already been
-bootstrapped for CDK version 2** then read
-the [official AWS instructions](https://docs.aws.amazon.com/cdk/v2/guide/bootstrapping.html) to do so - without this
-deployment will fail.
-
-If you want to use the
-version of CDK within the project then you should run `npx cdk ...` where the docs just say to run `cdk ...` . E.g. in
-the simplest case to bootstrap an account with no specific options then just run `npx cdk bootstrap` from your terminal,
-in the project's root directory.
+You might choose to update the workflow to also deploy a non-ephemeral version of the app. To do this add running
+`npm run deploy` to your workflow - in which case you may also want to specify the `STACK_NAME` env var.
 
 ## Changelog
 
@@ -175,6 +174,8 @@ in the project's root directory.
 * Update Node to Node 16 (tooling + runtime)
 * Switch to CDK for building, by using NodejsFunction
 * Standardize project setup vs https://github.com/symphoniacloud/cdk-bare-bones
+* Update this README, referring to bare bones project to avoid duplication
+* Remove username based stack naming to simplify things a little
 
 ### 2022.1
 
