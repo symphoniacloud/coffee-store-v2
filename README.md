@@ -167,6 +167,12 @@ the workflow manually through the web console.
 You might choose to update the workflow to also deploy a non-ephemeral version of the app. To do this add running
 `npm run deploy` to your workflow - in which case you may also want to specify the `STACK_NAME` env var.
 
+## Questions / Feedback / etc.
+
+If you have questions related to this example please add a Github issue, or drop me a line
+at [mike@symphonia.io](mailto:mike@symphonia.io) . I'm also on Twitter
+at [@mikebroberts](https://twitter.com/mikebroberts) .
+
 ## Changelog
 
 ### 2022.2
