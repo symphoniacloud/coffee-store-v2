@@ -172,7 +172,7 @@ You might choose to update the workflow to also deploy a non-ephemeral version o
 ### 2022.2
 
 * Update Node to Node 16 (tooling + runtime)
-* Switch to CDK for building, by using NodejsFunction
+* Switch to CDK for building, by using [NodejsFunction](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs.NodejsFunction.html)
 * Standardize project setup vs https://github.com/symphoniacloud/cdk-bare-bones
 * Update this README, referring to bare bones project to avoid duplication
 * Remove username based stack naming to simplify things a little
