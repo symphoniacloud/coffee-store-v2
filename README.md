@@ -175,6 +175,20 @@ at [@mikebroberts](https://twitter.com/mikebroberts) .
 
 ## Changelog
 
+### 2022.3
+
+* Update project dependency versions
+* Move cdk.json to src/cdk directory. This is for a couple of reasons:
+  - One fewer file in project root, which I think is A Good Thing
+  - Makes it easier to have repos with multiple, separate, CDK apps
+* Update lambdaFunction definition for new relative location of app source code 
+  - This is necessary because of the previous change - CDK is going to be running in a different directory now
+* Move "output" and "requireApproval" CDK settings from package.json to cdk.json
+  - I hadn't read the docs enough to know they could be in cdk.json. Oops. This way is cleaner
+* Use CDK `build` step to run TSC instead of `preCompilation` in NodejsFunction
+  - Getting NodejsFunction to run tsc just for type-checking is problematic, but I had it working in previous version.
+I hadn't realized before that the "build" CDK property applied to *all* synth activities, not just "cdk watch", and so putting project-wide type checking in the "build" property, combined with still using NodejsFunction for running esbuild, is a cleaner solution. This allows cleaning up the previous workaround in tsconfig.json
+
 ### 2022.2
 
 * Update Node to Node 16 (tooling + runtime)
