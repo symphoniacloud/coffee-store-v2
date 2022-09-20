@@ -14,14 +14,12 @@ class CoffeeStoreStack extends Stack {
 
         const lambdaFunction = new NodejsFunction(this, 'HelloWorldFunction', {
             runtime: Runtime.NODEJS_16_X,
-            entry: 'src/lambdaFunctions/api/lambda.ts',
+            entry: '../lambdaFunctions/api/lambda.ts',
             bundling: {
                 target: 'node16',
                 sourceMap: true,
                 sourceMapMode: SourceMapMode.INLINE,
-                sourcesContent: false,
-                // We use this to perform type checking with tsc, rather than actually generating any files
-                preCompilation: true
+                sourcesContent: false
             },
         })
 
